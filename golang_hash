@@ -1,0 +1,34 @@
+Golang的md5 hash计算
+
+Golang计算md5值的方法都是接收byte型slice([]byte)。而且使用习惯上也觉得略奇怪。
+
+看了好几个例子才看懂。
+
+感觉Golang标准库在设计这些模块的时候，都会考虑使用带New关键字工厂生成一个该类型的结构体对象。然后再使用改对象的方法进行操作。
+
+ 
+
+md5包就是这样，来看例子：
+
+s := "api_key" + ApiKey + "param" + Param + "time" + time + "version" + version + ApiSecret
+signByte := []byte(s)
+hash := md5.New()
+hash.Write(signByte)
+return hex.EncodeToString(hash.Sum(nil))
+第一行我拼接了一个字符串。
+
+第二行我将这个字符串转成byte型数组并赋值给了sighByte。
+
+第三行我new了一个md5的实现了hash.Hash的结构体。
+
+第四行我调用这个结构体的方法Write将我需要计算md5的[]byte传入进去。
+
+第五行我调用hex.EncodeToSring方法来把计算结果转换成16进制字符串。其中hash.Sum(nil)方法可以生成前面Write进去的signByte变量的128bit md5值。这个hash.Sum方法并不是我们在操作其它语言的那种使用习惯，将值传递进去然后返回hash，这里其实是追加一个值一并生成hash。由于我们不需要再追加值了，所以传入nil得到signByte的hash值。
+
+ 
+
+ 
+
+Reference:
+
+http://stackoverflow.com/questions/24234322/golang-md5-sum-function  golang-md5-sum-function
