@@ -1,0 +1,107 @@
+myhash.go
+?
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+/**
+ * Created with IntelliJ IDEA.
+ * User: liaojie
+ * Date: 12-9-8
+ * Time: 下午3:53
+ * To change this template use File | Settings | File Templates.
+ */
+package main
+import (
+  "crypto/md5"
+  "crypto/sha1"
+  "crypto/sha256"
+  "crypto/sha512"
+  "flag" //命令行选项解析器
+  "fmt"
+  "hash"
+  "io"
+  "os"
+)
+var style = flag.String("s", "sha256", "采用的哈西函数:sha1,sha256")
+var filename = flag.String("f", "", "需要计算散列值的文件名")
+func main() {
+  flag.Parse()
+  var hs hash.Hash
+  switch *style {
+  case "md5":
+    hs = md5.New()
+  case "sha1":
+    hs = sha1.New()
+  case "sha512":
+    hs = sha512.New()
+  default:
+    hs = sha256.New()
+  }
+  if len(*filename) == 0 {
+    filein, err := os.Open(flag.Args()[len(flag.Args())-1])
+    if err != nil {
+      return
+    } else {
+      io.Copy(hs, filein)
+    }
+  } else {
+    filein, err := os.Open(*filename)
+    if err != nil {
+      return
+    } else {
+      io.Copy(hs, filein)
+    }
+  }
+  hashString := hs.Sum(nil)
+  fmt.Printf("%x\n", hashString)
+}
+以上所述就是本文的全部内容了，希望大家能够喜欢。
