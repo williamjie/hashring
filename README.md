@@ -5,7 +5,7 @@ A golang consistent hashring
 Install
 ===
 
-	go get github.com/g4zhuj/hashring
+	go get github.com/williamjie/hashring
 
 Usage
 ===
